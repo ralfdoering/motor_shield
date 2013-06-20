@@ -44,6 +44,22 @@ void switchDirection() {
 
 }
 
+void setSpeedMotorA(unsigned int speed) {
+  digitalWrite(pwm_a,speed);
+}
+
+void setSpeedMotorB(unsigned int speed) {
+  digitalWrite(pwm_b,speed);
+}
+
+void stopMotorA(){
+  setSpeedMotorA(0);
+}
+
+void stopMotorB(){
+  setSpeedMotorB(0);
+}
+
 void moveForward() {
   setMotorADirection(FORWARD);
   setMotorBDirection(FORWARD);
@@ -60,15 +76,22 @@ void moveBackward() {
 }
 
 void turnRight() {
-  stopMotorA();
+  //stopMotorA();
   setMotorBDirection(FORWARD);
-  setSpeedMotorB(global_speed);  
+  setMotorADirection(BACKWARD);
+  setSpeedMotorB(global_speed);
+  setSpeedMotorA(global_speed);  
 }
 
 void turnLeft() {
-  stopMotorB();
+  //stopMotorB();
   setMotorADirection(FORWARD);
-  setSpeedMotorA(global_speed);   
+  setMotorBDirection(BACKWARD);
+  
+  setSpeedMotorB(global_speed);
+  setSpeedMotorA(global_speed);  
+  
+     
 }
 
 void stopMoving() {
@@ -76,21 +99,6 @@ void stopMoving() {
   stopMotorB();
 }
 
-void setSpeedMotorA(unsigned int speed) {
-  digitalWrite(pwm_a,speed);
-}
-
-void setSpeedMotorB(unsigned int speed) {
-  digitalWrite(pwm_b,speed);
-}
-
-void stopMotorA(){
-  setSpeedMotorA(0);
-}
-
-void stopMotorb(){
-  setSpeedMotorB(0);
-}
 
 
 
@@ -109,7 +117,7 @@ void loop() {
   //}
   
   //wait till data is available on serial port
-  Serial.println("Press a key to start me movin (again)...");
+  //Serial.println("Press a key to start me movin (again)...");
   printMenu();
   
   //wait for key
@@ -126,19 +134,24 @@ void loop() {
     // example 'a' = 97, 'b' = 98, and so forth:
 
     switch (inByte) {
-    case 'f':    
+    case 'f':
+      Serial.println("Forward");    
       moveForward();
       break;
-    case 'b':    
+    case 'b':
+      Serial.println("Backward");    
       moveBackward();
       break;
-    case 'l':    
+    case 'l':   
+      Serial.println("Left"); 
       turnLeft();
       break;
-    case 'r':    
+    case 'r':
+      Serial.println("Right");    
       turnRight();
       break;
-    case 's':    
+    case 's':
+      Serial.println("Stop");    
       stopMoving();
       break;
     default:
@@ -150,5 +163,6 @@ void loop() {
     delay(1000);
     stopMoving();
   }
-  Serial.println("Back to start");
+  //Serial.println("Back to start");
+}
 }
