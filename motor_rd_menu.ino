@@ -2,6 +2,7 @@ int pwm_a = 3;
 int pin_dir_a = 12;
 int pwm_b = 11;
 int pin_dir_b = 13;
+int pin_collision_front = 2;
 const int FORWARD = 1;
 const int BACKWARD = 0;
 
@@ -16,14 +17,19 @@ void setup() {
   pinMode(pwm_b, OUTPUT);
   pinMode(pin_dir_a, OUTPUT);
   pinMode(pin_dir_b, OUTPUT);
+  pinMode(pin_collision_front, INPUT);
   setMotorADirection(FORWARD);
   setMotorBDirection(FORWARD);
   stopMoving();
-
-
+  attachInterrupt(0, collision_front, CHANGE);
 
   // put your setup code here, to run once:
 
+}
+
+
+void collision_front() {
+  stopMoving(); 
 }
 
 void setMotorADirection(int dir) {
