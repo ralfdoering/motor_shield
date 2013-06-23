@@ -5,6 +5,7 @@ int pin_dir_b = 13;
 int pin_collision_front = 2;
 const int FORWARD = 1;
 const int BACKWARD = 0;
+const int collision_status = 7;
 
 int direction_a = FORWARD;
 int direction_b = FORWARD;
@@ -18,10 +19,21 @@ void setup() {
   pinMode(pin_dir_a, OUTPUT);
   pinMode(pin_dir_b, OUTPUT);
   pinMode(pin_collision_front, INPUT);
+  pinMode(collision_status, OUTPUT);
   setMotorADirection(FORWARD);
   setMotorBDirection(FORWARD);
   stopMoving();
+  //blink col status LED to say "ready"
+  for(int i=0; i<5; i++){
+    digitalWrite (collision_status, HIGH);
+    delay(200);
+    digitalWrite (collision_status, LOW);
+    delay(200);
+  }
+  Serial.println("");
+  Serial.println("Ready");
   attachInterrupt(0, collision_front, CHANGE);
+  
 
   // put your setup code here, to run once:
 
@@ -29,6 +41,14 @@ void setup() {
 
 
 void collision_front() {
+  int r_state = digitalRead(pin_collision_front);    // reads the status of the sensor
+  //coll_front_detected = r_state;
+  if(r_state == 0)
+    digitalWrite (collision_status, HIGH);      // collision detectet, turn on the led
+  else
+    digitalWrite (collision_status, LOW);       // turn off the led
+  //stopMoving(); 
+//  cli();
   stopMoving(); 
 }
 
